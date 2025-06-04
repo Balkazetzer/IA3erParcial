@@ -1,0 +1,58 @@
+import heapq  # Importamos una cola de prioridad para elegir siempre la arista con menor peso
+
+def prim_simulador(grafo, nodo_inicial):
+    visitados = set()     # Conjunto para llevar un registro de los nodos que ya han sido incluidos en el árbol
+    aristas = []          # Lista de aristas candidatas, implementada como una cola de prioridad
+    arbol = []            # Lista que almacenará las conexiones finales del árbol generado
+    total = 0             # Costo total acumulado del árbol de expansión mínima
+
+    print(f"Iniciando desde el nodo: {nodo_inicial}")
+    visitados.add(nodo_inicial)  # Marcamos el nodo inicial como visitado
+
+    # Añadimos todas las aristas que conectan al nodo inicial con sus vecinos
+    for vecino, peso in grafo[nodo_inicial]:
+        heapq.heappush(aristas, (peso, nodo_inicial, vecino))
+
+    # Mientras haya aristas por explorar
+    while aristas:
+        peso, u, v = heapq.heappop(aristas)  # Seleccionamos la arista con menor peso
+
+        if v in visitados:
+            continue  # Si el nodo destino ya está en el árbol, lo ignoramos para evitar ciclos
+
+        # Marcamos el nodo como visitado e incluimos la arista en el árbol final
+        visitados.add(v)
+        arbol.append((u, v, peso))
+        total += peso  # Sumamos el peso de esta arista al costo total
+
+        print(f"\nConectando {u} -> {v} con peso {peso}")
+        print(f"Nodos conectados hasta ahora: {visitados}")
+
+        # Añadimos las nuevas aristas desde el nodo recién añadido hacia sus vecinos no visitados
+        for vecino, p in grafo[v]:
+            if vecino not in visitados:
+                heapq.heappush(aristas, (p, v, vecino))
+
+    # Al terminar, imprimimos el árbol generado
+    print("\nÁrbol de expansión mínima generado:")
+    for u, v, peso in arbol:
+        print(f"{u} -- {v}  (peso {peso})")
+
+    print(f"\nCosto total del árbol: {total}")
+
+# Definición de un grafo ponderado no dirigido, representado como un diccionario de listas
+# Cada clave es un nodo y su valor es una lista de tuplas (vecino, peso de la arista)
+grafo = {
+    'A': [('B', 4), ('H', 8)],
+    'B': [('A', 4), ('C', 8), ('H', 11)],
+    'C': [('B', 8), ('D', 7), ('F', 4), ('I', 2)],
+    'D': [('C', 7), ('E', 9), ('F', 14)],
+    'E': [('D', 9), ('F', 10)],
+    'F': [('C', 4), ('D', 14), ('E', 10), ('G', 2)],
+    'G': [('F', 2), ('H', 1), ('I', 6)],
+    'H': [('A', 8), ('B', 11), ('G', 1), ('I', 7)],
+    'I': [('C', 2), ('G', 6), ('H', 7)],
+}
+
+# Ejecutamos el simulador empezando desde el nodo 'A'
+prim_simulador(grafo, 'A')
