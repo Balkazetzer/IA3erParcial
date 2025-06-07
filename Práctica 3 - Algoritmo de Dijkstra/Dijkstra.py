@@ -1,5 +1,4 @@
 import heapq
-
 # Grafo como diccionario de adyacencia
 grafo = {
     'A': {'B': 4, 'C': 2},
@@ -48,3 +47,4 @@ distancias, caminos = dijkstra(grafo, 'A')
 print("Resultados finales:\n")
 for nodo in grafo:
     print(f"Distancia más corta hasta {nodo}: {distancias[nodo]} → Camino: {' -> '.join(caminos[nodo])}")
+
